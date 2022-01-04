@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<!--
+	Prologue by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Crime Analysis</title>
+		<meta charset="utf-8" />
+		<style>
+			.sidenav {
+			  height: 100%;
+			  position: fixed;
+			  z-index: 1;
+			  top: 0;
+			  left: 0;
+			  background-color: #111;
+			  overflow-x: hidden;
+			  transition: 0.5s;
+			  padding-top: 60px;
+			  text-align:center;
+			}
+
+			
+
+			.sidenav a:hover{
+			  color: #f1f1f1;
+			}
+
+			.sidenav .closebtn {
+			  position: absolute;
+			  top: 0;
+			  right: 25px;
+			  font-size: 36px;
+			  margin-left: 50px;
+			}
+
+			@media screen and (max-height: 450px) {
+			  .sidenav {padding-top: 15px;}
+			  .sidenav a {font-size: 18px;}
+			}
+		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+				<div class="top">
+					<div id="content_item">
+						<h1 class="header1">Kirovsky district</h1>
+					</div>
+
+					<div id="content_entry">
+						<p class="header1">Total number of incidients</p>
+						<h1>12M+</h1>
+						<p class="header1">District ranking</p>
+						<h1>3.8</h1>
+						<h3 class="header1">List of incidients</h3>
+						<table>
+								<tr>
+								  <th>Title</th>
+								  <th>Category</th>
+								  <th>Date</th>
+								  <th>Source</th>
+								  </tr>
+								 <tr>
+								  <td>Murder</td>
+								  <td>11/24/2021</td>
+								  <td>a girl has been shot by a stranger</td>
+								  <td>https://www.sciencedirect.com/science/article/pii/S1877050920305731</td>
+								 </tr>
+								<tr>
+								  <td>Murder</td>
+								  <td>11/24/2021</td>
+								   <td>a girl has been shot by a stranger</td>
+								  <td>https://www.sciencedirect.com/science/article/pii/S1877050920305731</td>
+								</tr>
+								<tr>
+								  <td>Murder</td>
+								  <td>11/24/2021</td>
+								  <td>a girl has been shot by a stranger</td>
+								  <td>https://www.sciencedirect.com/science/article/pii/S1877050920305731</td>
+								</tr>
+								<tr>
+								  <td>Murder</td>
+								  <td>11/24/2021</td>
+								  <td>a girl has been shot by a stranger</td>
+								  <td>https://www.sciencedirect.com/science/article/pii/S1877050920305731</td>
+								</tr>
+							</table>
+				       
+				        <div id="show_btn">
+				       		<h4 onclick="openNav()">Show all 25 entries →</h4>
+				       	</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+				<a  class="image fit"><img src="images/Ekb_all_districts-01.jpg" alt="map" usemap="#map"  />
+					<map name="map">
+						<!--Железнодорожный					-->
+					  <area shape="circle" coords="542,363,50" alt="Phone" onclick="openNav()">
+						<!--Орджоникидзевский					-->
+						<area shape="circle" coords="892,300,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Кировский					-->
+						<area shape="circle" coords="1010,560,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Верх-Исетский				-->
+						<area shape="circle" coords="570,694,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Академический					-->
+						<area shape="circle" coords="292,830,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Ленинский					-->
+						<area shape="circle" coords="735,789,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Октябрьский					-->
+						<area shape="circle" coords="1015,816,50"  alt="Cup of coffee"  onclick="openNav()">
+						<!--Чкаловский					-->
+						<area shape="circle" coords="913,1073,50"  alt="Cup of coffee"  onclick="openNav()">
+					</map>
+				</a>
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+				<!-- Copyright -->
+					<ul class="copyright">
+						<li>&copy;Copyright © 2021 RedZone Inc. All rights reserved.</li>
+					</ul>
+					<ul class="icons">
+							<li><a href="#" class="icon brands fa-facebook-f"  onclick="openNav()"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+							<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+			</div>
+
+		<!-- Scripts -->
+			<script>
+				function openNav() {
+					if (document.getElementById("header").style.width == "0%") {
+						document.getElementById("header").style.width = "30%";
+					}
+					else{
+				  		document.getElementById("header").style.width = "100%";
+					}
+				}
+
+				function closeNav() {
+					if (document.getElementById("header").style.width == "100%") {
+						document.getElementById("header").style.width = "30%";
+					}
+
+					else{
+				  		document.getElementById("header").style.width = "0%";
+					}
+				}
+			</script>
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

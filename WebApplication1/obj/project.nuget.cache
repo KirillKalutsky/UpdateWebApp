@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Rvsb+NTXkwNUoqf/EK/hT2dcZlLeqzfzj856ab+1vDgjj9l9DMPkFUHVzi2p2H3cGU1D9tUjmtnfYAXM0d2gmQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Asus\\source\\repos\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Asus\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Asus\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

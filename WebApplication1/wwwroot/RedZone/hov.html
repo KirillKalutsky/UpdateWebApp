@@ -1,0 +1,65 @@
+<!--
+A tooltip is use to specify extra information about something when user moves cursor over an HTML element.
+-->
+
+<!DOCTYPE html>
+<html>
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px 5px 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  text-align: center;
+
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+
+</style>
+<body style="text-align:center; margin-top: 20%;" >
+
+<div class="tooltip">Hover over me
+  <span class="tooltiptext">
+    <table>
+          <tr>
+            <th>Num</th>
+            <th>Category</th>
+          </tr>
+          <tr>
+            <td>123+</td>
+            <td>241</td>
+           </tr>
+    </table>
+  </span>
+</div>
+
+</body>
+</html>

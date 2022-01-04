@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/RedZone/assets/css/main.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication1</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .sidenav {
+            height: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            text-align: center;
+        }
+
+        .map-image {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+            .map-image a {
+                position: absolute;
+                display: block;
+                background-color: #F5C0B8;
+                border-radius: 50%;
+                width: 8%;
+                height: 8%;
+                opacity: 0.58;
+            }
+
+                .map-image a .circle {
+                    position: relative;
+                    display: block;
+                    background-color: #D02B20;
+                    border-radius: 50%;
+                    left: 25%;
+                    top: 25%;
+                    width: 50%;
+                    height: 50%;
+                    opacity: 0.91;
+                }
+
+                .map-image a:hover {
+                    /*background-color: #D02B20;*/
+                    opacity: 1;
+                }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        @@media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+        }
+    </style>
+</head>
+<body>
+    @RenderBody()
+
+    <div id="footer">
+        <!-- Copyright -->
+        <ul class="copyright">
+            <li>&copy;Copyright © 2021 RedZone Inc. All rights reserved.</li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+            <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+        </ul>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function changeButtonClicked(districtName) {
+            var url = '@Url.Action("GetNewDistrictEvents", "Main")';
+            $.post(url, { districtName: districtName });
+        }
+
+        function openDistrict(districtName) {
+            alert("нажатие");
+            var url = '@Url.Action("GetDistrictEvents", "Main")';
+            $.post(url, { districtName: districtName }, function (data) {
+                if (data) {
+                    var district = JSON.parse(data);
+                    $('.districtName').text(districtName + ' район');
+                    var table = $('.districtEvents');
+                    table.empty();
+                    table.append('<tr><th>Заголовок</th><th>Категория</th><th>Дата</th><th>Сылка на источник</th></tr>');
+                    $.each(district, function (index, value) {
+                        if (value.IsChecked) {
+                            table.append('<tr id="viewed"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + value.Event.DateOfDownload + '</td>' + '<td>' + '<a target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                        } else {
+                            table.append('<tr id="notViewed"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + value.Event.DateOfDownload + '</td>' + '<td>' + '<a target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                        }
+                    });
+                    openNav();
+                }
+                else {
+                    alert("Сведения о данном районе не удалось получить");
+                }
+            });
+        }
+
+        function openNav() {
+            if (document.getElementById("header").style.width == "0%") {
+                document.getElementById("header").style.width = "21%";
+            }
+            else {
+                document.getElementById("header").style.width = "100%";
+            }
+        }
+
+        function closeNav() {
+            if (document.getElementById("header").style.width == "100%") {
+                document.getElementById("header").style.width = "20%";
+            }
+
+            else {
+                document.getElementById("header").style.width = "0%";
+            }
+
+        }
+
+        setInterval(changeButtonClicked, 20000, 'железнодорожный');
+        setInterval(changeButtonClicked, 20000, 'орджоникидзевский');
+        setInterval(changeButtonClicked, 20000, 'кировский');
+        setInterval(changeButtonClicked, 20000, 'октябрьский');
+        setInterval(changeButtonClicked, 20000, 'чкаловский');
+        setInterval(changeButtonClicked, 20000, 'ленинский');
+        setInterval(changeButtonClicked, 20000, 'верх-исетский');
+        setInterval(changeButtonClicked, 20000, 'академический');
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

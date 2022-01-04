@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Crime Analysis";
+}
+
+<div id="header" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="top">
+        <div id="content_item">
+            <h1 class="header1 districtName"></h1>
+        </div>
+
+        <div id="content_entry">
+
+            <div id="show_btn">
+                <h4 onclick="openNav()">Развернуть →</h4>
+            </div>
+            <h3 class="header1">Список происшествий</h3>
+
+            <table class="districtEvents">
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Main -->
+<div id="main">
+
+    <div class="map-image">
+        <img src="/RedZone/images/Ekb_all_districts_2-01.jpg" style="display: block; width: 100%;" alt="" />
+        <!--					Железнодорожный-->
+        <a onclick="openDistrict('железнодорожный')" style="top: 22%; left: 35%; "><div class="circle"></div></a>
+        <!--					Орджоникидзевский-->
+        <a onclick="openDistrict('орджоникидзевский')" style="top: 17.5%; left: 60.1%; "><div class="circle"></div></a>
+        <!--					Кировский-->
+        <a onclick="openDistrict('кировский')" style="top: 36%; left: 69%; "><div class="circle"></div></a>
+        <!--					Октябрьский-->
+        <a onclick="openDistrict('октябрьский')" style="top: 55%; left: 69%; "><div class="circle"></div></a>
+        <!--					Чкаловский-->
+        <a onclick="openDistrict('чкаловский')" style="top: 74%; left: 52%; "><div class="circle"></div></a>
+        <!--					Ленинский-->
+        <a onclick="openDistrict('ленинский')" style="top: 54%; left: 49%; "><div class="circle"></div></a>
+        <!--					Верх-Исетский-->
+        <a onclick="openDistrict('верх-исетский')" style="top: 46%; left: 37%; "><div class="circle"></div></a>
+        <!--					Академический-->
+        <a onclick="openDistrict('академический')" style="top: 65%; left: 24%; "><div class="circle"></div></a>
+
+
+    </div>
+</div>
