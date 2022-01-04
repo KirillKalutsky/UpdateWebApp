@@ -101,7 +101,6 @@
         }
 
         function openDistrict(districtName) {
-            alert("нажатие");
             var url = '@Url.Action("GetDistrictEvents", "Main")';
             $.post(url, { districtName: districtName }, function (data) {
                 if (data) {
@@ -155,6 +154,13 @@
         setInterval(changeButtonClicked, 20000, 'академический');
 
     </script>
+    <script src="/RedZone/assets/js/jquery.min.js"></script>
+    <script src="/RedZone/assets/js/jquery.scrolly.min.js"></script>
+    <script src="/RedZone/assets/js/jquery.scrollex.min.js"></script>
+    <script src="/RedZone/assets/js/browser.min.js"></script>
+    <script src="/RedZone/assets/js/breakpoints.min.js"></script>
+    <script src="/RedZone/assets/js/util.js"></script>
+    <script src="/RedZone/assets/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
