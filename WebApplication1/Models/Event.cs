@@ -8,29 +8,16 @@ namespace Parser
     public class Event
     {
         [Key]
-        public string Link { get; set; }
-        public Source Source { get; set; }
-        public string Title { get; set; }
-        public string IncidentCategory {get;set;}
-        private string body;
-        public string Body 
-        {
-            get { return body; }
-            set
-            {
-                if (value.Length > 1000)
-                    body = value.Substring(0, 1000);
-                else
-                    body = value;
-            }
+        public string Link { get; set; }//сылка на источник
+        public Source Source { get; set; }//представление источника(для БД связь использовалась)
+        public string Title { get; set; }//заголовок статьи
+        public string IncidentCategory {get;set;}//одна из категорий инцидента(дтп, пожар, ...)
+        
+        public DateTime DateOfDownload { get; set; }//дата распаршевания статьи(использую ее так как
+                                                    //подразумевается что будем парсить в реальном времени
+                                                    //и разница с датой написанной в статье не критична)
+        public District District{ get; set; }//представление района
 
-        }
-        public string Date { get; set; }
-        public DateTime DateOfDownload { get; set; }
-        public District District{ get; set; }
-
-        [Column(TypeName = "jsonb")]
-        public HashSet<string> Hash { get; }
 
         public override int GetHashCode()
         {
@@ -45,9 +32,5 @@ namespace Parser
             return ((Event)obj).Link.Equals(Link);
         }
 
-        public override string ToString()
-        {
-            return $"{Link}\n{Body}";
-        }
     }
 }

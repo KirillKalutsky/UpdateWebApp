@@ -18,7 +18,6 @@ C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebA
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.RazorAssemblyInfo.cache
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.RazorAssemblyInfo.cs
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\staticwebassets\WebApplication1.StaticWebAssets.Manifest.cache
-C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\staticwebassets\WebApplication1.StaticWebAssets.xml
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\scopedcss\bundle\WebApplication1.styles.css
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.TagHelpers.input.cache
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.TagHelpers.output.cache
@@ -39,3 +38,4 @@ C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebA
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.genruntimeconfig.cache
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\obj\Debug\net5.0\WebApplication1.csproj.CopyComplete
 C:\Users\Asus\source\repos\WebApplication1\WebApplication1\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Asus\source\repos\WebApplication1\WebApplication1\bin\Debug\net5.0\WebApplication1.StaticWebAssets.xml

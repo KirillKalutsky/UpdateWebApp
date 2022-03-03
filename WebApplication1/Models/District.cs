@@ -5,6 +5,10 @@ namespace Parser
 {
     public class District
     {
+        [Key]
+        public string DistrictName { get; set; }
+        public List<Event> Events { get; set; }
+        public List<Address> Addresses { get; set; }
         public District()
         {
             Addresses = new List<Address>();
@@ -16,10 +20,7 @@ namespace Parser
             Addresses = new List<Address>();
         }
 
-        [Key]
-        public string DistrictName  { get; set; }
-        public List<Address> Addresses { get; set; }
-        public List<Event> Events { get; set; }
+       
 
     }
 }

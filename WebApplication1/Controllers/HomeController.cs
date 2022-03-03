@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet("")]
         public IActionResult Index()
         {
-            return View();
+            return View(new List<string> { "ДТП", "Пожар", "Физическое насилие", "Кражи", "Суицид", "ЖКХ" });
         }
 
         public IActionResult Privacy()

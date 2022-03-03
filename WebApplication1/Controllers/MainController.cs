@@ -4,10 +4,13 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Parser;
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using WebApplication.Models;
 
@@ -29,6 +32,31 @@ namespace WebApplication.Controllers
         {
             this.httpClient = new HttpClient();
             this.cache = cache;
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost("CheckEvent")]
+        public void CheckEvent(string link)
+        {
+            Debug.Print($"CheckEvent");
+            foreach (var dK in GetCachedKeys())
+            {
+                if (cache.TryGetValue(dK, out IEnumerable<EventForView> events))
+                {
+                    var ev = events.Where(e => e.Event.Link == link).LastOrDefault();
+                    if (ev != null)
+                    {
+                        Debug.Print($"Find {link} in {dK}");
+
+                        cache.Remove(dK);
+
+                        var newEv = events.Select(even => { if(even.Event.Link==link) even.IsChecked = true; return even; });
+
+                        cache.Set(dK, newEv, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
+                        
+                        return;
+                    }
+                }
+            }
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost("GetDistrict")]
@@ -72,39 +100,58 @@ namespace WebApplication.Controllers
             {
                 PreserveReferencesHandling = PreserveReferencesHandling.Objects
             };
-            Debug.Print("Post: " + districtName);
-            IEnumerable<EventForView> events;
+            var timeNow = DateTime.Now;
+            var time = new DateTime(timeNow.Year,timeNow.Month,timeNow.Day);
+            var tItem = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
 
-            if (!cache.TryGetValue(districtName, out events))
+            if (!cache.TryGetValue(districtName, out IEnumerable<EventForView> events))
             {
-                DateTime? time = null;
-                var response = await TryGetAsync(
-                    $"https://localhost:44393/District/Events?districtName={districtName}&lastEventDownloadTime={time}");
+                Debug.Print("Post first: " + districtName);
 
-                var newEvents = (await TryGetContent<IEnumerable<Event>>(response))?
-                    .Select(ev => new EventForView() { Event = ev, IsChecked = false });
+                DateTime? timeN = null;
 
-                cache.Set(districtName, newEvents,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
+                var newEvents = await GetViewEventsAsync(districtName, timeN);
+
+                cache.Set(districtName, newEvents, tItem);
             }
             else
             {
-                var lastDownloadTime = events?.OrderBy(ev => ev.Event.DateOfDownload).LastOrDefault().Event.DateOfDownload;
-                var response = await TryGetAsync(
-                   $"https://localhost:44393/District/Events?districtName={districtName}&lastEventDownloadTime={lastDownloadTime}");
+                var lastDownloadTime = events?.OrderBy(ev => ev.Event.DateOfDownload).LastOrDefault()?.Event.DateOfDownload ?? time;
 
-                var newEvents = (await TryGetContent<IEnumerable<Event>>(response));
-                var evev = newEvents?.Select(ev => new EventForView() { Event = ev, IsChecked = false });
+                var evev = await GetViewEventsAsync(districtName,lastDownloadTime);
                 var result = events;
-                if (evev != null)
-                    result = result?.Concat(evev);
 
-                cache.Remove(districtName);
-                cache.Set(districtName, result,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
+                Debug.Print($"Post second: {districtName } {lastDownloadTime} {evev.Count()}");
+
+                if (evev != null)
+                {
+                    result = result?.Concat(evev);
+                    cache.Remove(districtName);
+                    cache.Set(districtName, result, tItem);
+                }
+               
             }
 
-            return JsonConvert.SerializeObject((IEnumerable<EventForView>)cache.Get(districtName), settings);
+            var newEv = ((IEnumerable<EventForView>)cache.Get(districtName))?.Where(ev => !ev.IsChecked && !ev.IsViewed);
+            var count = newEv == null ? 0 : newEv.Count();
+            return JsonConvert.SerializeObject(count, settings);
+        }
+
+        private async Task<IEnumerable<EventForView>> GetViewEventsAsync(string districtName, DateTime? time)
+        {
+            HttpResponseMessage response;
+
+            if (districtName == "не определенный")
+                response = await TryGetAsync(
+                $"https://localhost:44393/Events/GetWithoutDistrict?lastEventDownloadTime={time}");
+            else
+                response = await TryGetAsync(
+                $"https://localhost:44393/District/Events?districtName={districtName}&lastEventDownloadTime={time}");
+
+            var newEvents = (await TryGetContent<IEnumerable<Event>>(response))?
+                .Select(ev => new EventForView() { Event = ev });
+
+            return newEvents;
         }
 
         //метод для получения событий для отображения из кеша
@@ -116,13 +163,13 @@ namespace WebApplication.Controllers
             Debug.Print("Post: " + districtName);
 
             IEnumerable<EventForView> events;
-
             if (cache.TryGetValue(districtName, out events))
             {
                 if (events != null && events.Where(ev => !ev.IsChecked).Any())
                 {
+
                     cache.Remove(districtName);
-                    var viewedEvents = events.Select(ev => { ev.IsChecked = true; return ev; });
+                    var viewedEvents = events.Select(ev => { ev.IsViewed = true; return ev; });
                     cache.Set(districtName, viewedEvents,
                         new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
                 }
@@ -188,6 +235,21 @@ namespace WebApplication.Controllers
                 result = JsonConvert.DeserializeObject<T>(response);
             }
             return result;
+        }
+
+        private List<string> GetCachedKeys()
+        {
+            var field = typeof(MemoryCache).GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+            var collection = field.GetValue(cache) as ICollection;
+            var items = new List<string>();
+            if (collection != null)
+                foreach (var item in collection)
+                {
+                    var methodInfo = item.GetType().GetProperty("Key");
+                    var val = methodInfo.GetValue(item);
+                    items.Add(val.ToString());
+                }
+            return items;
         }
     }
 }

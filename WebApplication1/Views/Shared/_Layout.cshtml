@@ -8,6 +8,94 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <style>
+
+        @*.searchButton {
+            background-image: url(/RedZone/images/search.png); /* 16px x 16px */
+            background-color: white; /* make the button transparent */
+            background-repeat: no-repeat; /* make the background image appear only once */
+            background-position: 0px 0px; /* equivalent to 'top left' */
+            border: none; /* assuming we don't want any borders */
+            cursor: pointer; /* make the cursor like hovering over an <a> element */
+            height: 40px; /* make this the size of your image */
+            padding-left: 40px; /* make text start to the right of the image */
+            vertical-align: middle; /* align the text vertically centered */
+            height: 40px;
+        }*@
+
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-collapse: collapse;
+            color: #686461;
+            border-radius: 10px;
+            margin-top: 1em;
+        }
+
+        caption {
+            padding: 10px;
+            color: white;
+            background: #8FD4C1;
+            font-size: 18px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        
+
+        th {
+            border-bottom: 1px solid #fff;
+            text-align: center;
+            @*background: black;*@
+            font-weight: bold;
+        }
+
+        td {
+            border-bottom: 0.5px solid #464646;
+            text-align: left;
+            @*background: black;*@
+            font-weight: bold;
+        }
+
+            th:first-child, td:first-child {
+                text-align: left;
+            }
+
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 10px;
+            border-right: none;
+        }
+
+        td {
+            padding: 10px 20px;
+        }
+
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+
+        tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+
+        tr td:last-child {
+            border-right: none;
+        }
+
+        
+
+        body {
+            -webkit-text-size-adjust: none;
+        }
+
+        mark {
+            background-color: transparent;
+            color: inherit;
+        }
+
         .sidenav {
             height: 100%;
             position: fixed;
@@ -28,6 +116,8 @@
         }
 
             .map-image a {
+                margin-right: auto;
+                margin-left: auto;
                 position: absolute;
                 display: block;
                 background-color: #F5C0B8;
@@ -36,6 +126,30 @@
                 height: 8%;
                 opacity: 0.58;
             }
+
+                .map-image a.other {
+                    margin-right: auto;
+                    margin-left: auto;
+                    position: absolute;
+                    display: block;
+                    background-color: #808080;
+                    border-radius: 50%;
+                    width: 8%;
+                    height: 8%;
+                    opacity: 0.58;
+                }
+
+                .map-image a.other .circle {
+                    position: relative;
+                    display: block;
+                    background-color: #464646;
+                    border-radius: 50%;
+                    left: 25%;
+                    top: 25%;
+                    width: 50%;
+                    height: 50%;
+                    opacity: 0.91;
+                }
 
                 .map-image a .circle {
                     position: relative;
@@ -49,10 +163,21 @@
                     opacity: 0.91;
                 }
 
+        .numb {
+            left: 30%;
+            top: 25%;
+            color: white;
+            position: relative;
+            display: block;
+        }
+
                 .map-image a:hover {
                     /*background-color: #D02B20;*/
                     opacity: 1;
                 }
+        table {
+            border-collapse: collapse;
+        }
 
         .sidenav a:hover {
             color: #f1f1f1;
@@ -66,6 +191,11 @@
             margin-left: 50px;
         }
 
+        tr.checked {
+            background-color: #62b578;
+            color:white;
+        }
+
         @@media screen and (max-height: 450px) {
             .sidenav {
                 padding-top: 15px;
@@ -75,6 +205,13 @@
                     font-size: 18px;
                 }
         }
+
+        
+
+        #checked {
+            background-color: #F5C0B8;
+        }
+       
     </style>
 </head>
 <body>
@@ -95,46 +232,107 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        function changeButtonClicked(districtName) {
+        function sortTable() {
+
+            var table = document.getElementById('info-table');
+            var startDate = Date.parse(document.getElementById('startDate').value);
+            var finishDate = Date.parse(document.getElementById('finishDate').value);
+
+            for (var i = 1; i < table.rows.length; i++) {
+
+                var date = Date.parse(table.rows[i].cells[2].innerHTML);
+
+                var flag = timeFilter(date, startDate, finishDate) && searchTypeIncident(table.rows[i].cells[1].innerHTML);
+
+                if (flag) {
+                    table.rows[i].style.display = "";
+                } else {
+                    table.rows[i].style.display = "none";
+                }
+            }
+        }
+
+        function searchTypeIncident(t) {
+            var phrase = document.getElementById('search-text');
+            var regPhrase = new RegExp(phrase.value, 'i');
+            return regPhrase.test(t);
+        }
+
+
+        function timeFilter(date, startDate, finishDate) {
+
+            if (isNaN(startDate) && isNaN(finishDate)) {
+                return true;
+            }
+            if (isNaN(startDate)) {
+                return date <= finishDate;
+            }
+            if (isNaN(finishDate)) {
+                return date >= startDate;
+            }
+
+            return date <= finishDate && date >= startDate;
+        }
+
+        function changeButtonClicked(districtName, idName) {
             var url = '@Url.Action("GetNewDistrictEvents", "Main")';
-            $.post(url, { districtName: districtName });
+            $.post(url, { districtName: districtName }, function (data) {
+                var elem = document.getElementById(idName);
+                elem.innerHTML = data;
+            });
         }
 
         function openDistrict(districtName) {
             var url = '@Url.Action("GetDistrictEvents", "Main")';
             $.post(url, { districtName: districtName }, function (data) {
                 if (data) {
+                    //alert(data);
                     var district = JSON.parse(data);
                     $('.districtName').text(districtName + ' район');
                     var table = $('.districtEvents');
                     table.empty();
-                    table.append('<tr><th>Заголовок</th><th>Категория</th><th>Дата</th><th>Сылка на источник</th></tr>');
+                    table.append('<tr><th>Заголовок</th><th>Категория </th><th>Дата</th><th>Сылка на источник</th></tr>');
                     $.each(district, function (index, value) {
+                        var date = value.Event.DateOfDownload.split('T')[0];
+
+@*                        if (value.IsViewed) {
+                            if (value.IsChecked) {
+                                table.append('<tr class="checked"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + data + '</td>' + '<td>' + '<a onclick="addToChecked(\'' + value.Event.Link + '\')' + '" target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                            }
+                            else {
+                                table.append('<tr class="viewed"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + date+ '</td>' + '<td>' + '<a onclick="addToChecked(\'' + value.Event.Link + '\')"' + ' target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                            }
+                        }*@
                         if (value.IsChecked) {
-                            table.append('<tr id="viewed"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + value.Event.DateOfDownload + '</td>' + '<td>' + '<a target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
-                        } else {
-                            table.append('<tr id="notViewed"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + value.Event.DateOfDownload + '</td>' + '<td>' + '<a target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                            table.append('<tr class="checked"><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + date + '</td>' + '<td>' + '<a onclick="addToChecked(\'' + value.Event.Link + '\')' + '" target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
+                        }
+                        else {
+                            table.append('<tr><td>' + value.Event.Title + '</td>' + '<td>' + value.Event.IncidentCategory + '</td>' + '<td>' + date+ '</td>' + '<td>' + '<a id="link" onclick="addToChecked(\'' + value.Event.Link + '\', ' + 'event)' + '" target="_blank" href = "' + value.Event.Link + '">' + value.Event.Link + '</a>' + '</td>' + '</tr> ');
                         }
                     });
                     openNav();
                 }
                 else {
-                    alert("Сведения о данном районе не удалось получить");
+                    //alert("Сведения о данном районе не удалось получить");
                 }
             });
         }
 
         function openNav() {
             if (document.getElementById("header").style.width == "0%") {
+                document.getElementById("filters").hidden = true;
                 document.getElementById("header").style.width = "21%";
             }
             else {
                 document.getElementById("header").style.width = "100%";
+                document.getElementById("filters").hidden = false;
+
             }
         }
 
         function closeNav() {
             if (document.getElementById("header").style.width == "100%") {
+                document.getElementById("filters").hidden = true;
                 document.getElementById("header").style.width = "20%";
             }
 
@@ -144,14 +342,25 @@
 
         }
 
-        setInterval(changeButtonClicked, 20000, 'железнодорожный');
-        setInterval(changeButtonClicked, 20000, 'орджоникидзевский');
-        setInterval(changeButtonClicked, 20000, 'кировский');
-        setInterval(changeButtonClicked, 20000, 'октябрьский');
-        setInterval(changeButtonClicked, 20000, 'чкаловский');
-        setInterval(changeButtonClicked, 20000, 'ленинский');
-        setInterval(changeButtonClicked, 20000, 'верх-исетский');
-        setInterval(changeButtonClicked, 20000, 'академический');
+        function addToChecked(link, e) {
+            //alert("Click");
+            e.target.parentNode.parentNode.className = "checked";
+            var url = '@Url.Action("CheckEvent", "Main")';
+            $.post(url, { link: link}, function () {
+
+            });
+        }
+
+
+        setInterval(changeButtonClicked, 20000, 'железнодорожный','jel');
+        setInterval(changeButtonClicked, 20010, 'орджоникидзевский', 'ord');
+        setInterval(changeButtonClicked, 20020, 'кировский', 'kir');
+        setInterval(changeButtonClicked, 20030, 'октябрьский', 'okt');
+        setInterval(changeButtonClicked, 20040, 'чкаловский', 'chk');
+        setInterval(changeButtonClicked, 20050, 'ленинский', 'len');
+        setInterval(changeButtonClicked, 20060, 'верх-исетский', 'ver');
+        setInterval(changeButtonClicked, 20070, 'академический', 'aka');
+        setInterval(changeButtonClicked, 20070, 'не определенный', 'oth');
 
     </script>
     <script src="/RedZone/assets/js/jquery.min.js"></script>

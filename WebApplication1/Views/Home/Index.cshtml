@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<string>
+@{
     ViewData["Title"] = "Crime Analysis";
 }
 
@@ -15,8 +16,15 @@
                 <h4 onclick="openNav()">Развернуть →</h4>
             </div>
             <h3 class="header1">Список происшествий</h3>
-
-            <table class="districtEvents">
+            @*<input class="form-control" type="text" placeholder="Тип инцидента" id="search-text" onkeyup="searchTypeIncident()">*@
+        <div id="filters">
+            <input type="date" id="startDate">
+            <input type="date" id="finishDate">
+            @Html.DropDownList("a", new SelectList(Model), "Все", new { @id = "search-text" })
+            <input type="button" onclick="sortTable()" class="searchButton" value="искать">
+        </div>
+            
+            <table class="districtEvents" id="info-table">
             </table>
 
 
@@ -30,22 +38,23 @@
     <div class="map-image">
         <img src="/RedZone/images/Ekb_all_districts_2-01.jpg" style="display: block; width: 100%;" alt="" />
         <!--					Железнодорожный-->
-        <a onclick="openDistrict('железнодорожный')" style="top: 22%; left: 35%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('железнодорожный')" style="top: 22%; left: 35%; "><div class="circle"><div id="jel" class="numb"></div></div></a>
         <!--					Орджоникидзевский-->
-        <a onclick="openDistrict('орджоникидзевский')" style="top: 17.5%; left: 60.1%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('орджоникидзевский')" style="top: 17.5%; left: 60.1%; "><div class="circle"><div id="ord" class="numb"></div></div></a>
         <!--					Кировский-->
-        <a onclick="openDistrict('кировский')" style="top: 36%; left: 69%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('кировский')" style="top: 36%; left: 69%; "><div class="circle" ><div id="kir" class="numb"></div></div></a>
         <!--					Октябрьский-->
-        <a onclick="openDistrict('октябрьский')" style="top: 55%; left: 69%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('октябрьский')" style="top: 55%; left: 69%; "><div class="circle" ><div id="okt" class="numb"></div></div></a>
         <!--					Чкаловский-->
-        <a onclick="openDistrict('чкаловский')" style="top: 74%; left: 52%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('чкаловский')" style="top: 74%; left: 52%; "><div class="circle" ><div id="chk" class="numb"></div></div></a>
         <!--					Ленинский-->
-        <a onclick="openDistrict('ленинский')" style="top: 54%; left: 49%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('ленинский')" style="top: 54%; left: 49%; "><div class="circle" ><div id="len" class="numb"></div></div></a>
         <!--					Верх-Исетский-->
-        <a onclick="openDistrict('верх-исетский')" style="top: 46%; left: 37%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('верх-исетский')" style="top: 46%; left: 37%; "><div class="circle" ><div id="ver" class="numb"></div></div></a>
         <!--					Академический-->
-        <a onclick="openDistrict('академический')" style="top: 65%; left: 24%; "><div class="circle"></div></a>
+        <a onclick="openDistrict('академический')" style="top: 65%; left: 24%; "><div class="circle" ><div id="aka" class="numb"></div></div></a>
 
+        <a class="other" onclick="openDistrict('не определенный')" style="top: 2.5%; left: 90%; "><div class="circle"><div id="oth" class="numb"></div></div></a>
 
     </div>
 </div>
